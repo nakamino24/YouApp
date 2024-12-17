@@ -6,16 +6,30 @@ import Layout from "../../../components/Layout";
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
 import { EyeOpenIcon, EyeClosedIcon } from "../../../components/icons/EyeIcon";
+import login from "../../../services/auth/login"; // Service untuk login
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const handleLogin = () => {
-    console.log("Login with", { email, password });
+  const handleLogin = async () => {
+    setLoading(true);
+    setError("");
+
+    const response = await login({ email, password });
+    if (response.success && response.data) {
+      localStorage.setItem("token", response.data.token);
+      router.push("/profile/getProfile");
+    } else {
+      setError(response.message || "Invalid email or password.");
+    }
+
+    setLoading(false);
   };
 
   const handleBack = () => {
@@ -31,7 +45,7 @@ export default function LoginPage() {
 
       <h1 className="text-3xl font-bold text-white mb-6 text-center">Login</h1>
 
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
         <Input
           placeholder="Johndoe@gmail.com"
           type="email"
@@ -55,7 +69,14 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <Button text="Login" onClick={handleLogin} variant="gradient" />
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <Button
+          text={loading ? "Logging in..." : "Login"}
+          onClick={handleLogin}
+          variant="gradient"
+          disabled={loading}
+        />
       </form>
 
       <p className="text-gray-400 text-center mt-6">

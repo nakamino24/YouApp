@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Layout from "../../../components/Layout";
-import Input from "../../../components/Input";
-import Button from "../../../components/Button";
 import register from "../../../services/auth/register";
+import Input from "../../../components/Input"; // Import komponen Input
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -14,7 +12,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  
+
   const router = useRouter();
 
   const handleRegister = async () => {
@@ -23,70 +21,86 @@ export default function RegisterPage() {
       setSuccess("");
       return;
     }
-  
+
     const response = await register({ email, password });
     if (response.success) {
       setSuccess("Registration successful!");
       setError("");
-      router.push("/profile/getProfile"); 
+
+      if (response.data && response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+
+      router.push("/profile/getProfile");
     } else {
       setError(response.message || "Failed to register.");
       setSuccess("");
     }
   };
 
-  const handleBack = () => {
-    router.push("/"); 
-  };
-
   return (
-    <Layout>
-      {/* Back Button */}
-      <button onClick={handleBack} className="text-gray-400 hover:text-white mb-6">
-        {"<"} Back
-      </button>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      {/* Card Container */}
+      <div className="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-lg">
+        {/* Header */}
+        <h1 className="text-3xl font-bold text-center mb-6">Create an Account</h1>
+        <p className="text-gray-400 text-center mb-6">
+          Join us to explore the full experience.
+        </p>
 
-      {/* Title */}
-      <h1 className="text-3xl font-bold text-white mb-6 text-center">Register</h1>
+        {/* Form */}
+        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <Input
+            label="Email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            label="Username"
+            type="text"
+            placeholder="yourusername"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <Input
+            label="Password"
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Input
+            label="Confirm Password"
+            type="password"
+            placeholder="••••••••"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
 
-      {/* Form Inputs */}
-      <div className="space-y-4">
-        <Input
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Input
-          placeholder="Create Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <Input
-          placeholder="Create Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Input
-          placeholder="Confirm Password"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        <Button text="Register" onClick={handleRegister} variant="gradient" />
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {success && <p className="text-green-500 text-sm">{success}</p>}
+
+          {/* Submit Button */}
+          <button
+            type="button"
+            onClick={handleRegister}
+            className="w-full p-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition font-semibold"
+          >
+            Register
+          </button>
+        </form>
+
+        {/* Footer */}
+        <p className="text-gray-400 text-center mt-6">
+          Already have an account?{" "}
+          <a href="/auth/login" className="text-blue-400 hover:underline">
+            Login here
+          </a>
+        </p>
       </div>
-
-      {/* Success and Error Messages */}
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {success && <p className="text-green-500 mt-2">{success}</p>}
-
-      {/* Login Redirect */}
-      <p className="text-gray-400 text-center mt-6">
-        Have an account?{" "}
-        <a href="/auth/login" className="text-blue-400 hover:underline">
-          Login here
-        </a>
-      </p>
-    </Layout>
+    </div>
   );
 }

@@ -1,27 +1,46 @@
-// Types for Login and Register Inputs
-export interface AuthData {
-    email: string;
-    password: string;
-}
-
-// Type for API Response
+// Generic API Response Type
 export interface ApiResponse<T = unknown> {
     success: boolean;
     message?: string;
     data?: T;
-}  
-
-// Type for User Profile Data
+}
+  
+// Input Data for Register
+export interface AuthData {
+    email: string;
+    password: string;
+}
+  
+// Specific Response for Register API
+export interface RegisterResponse {
+    id: number;
+    email: string;
+    token: string;
+}
+  
+  
+// Response for Login API
+export interface LoginResponse {
+    token: string;
+    user: {
+      id: number;
+      email: string;
+    };
+}
+  
+// User Profile Data
 export interface ProfileData {
-    id: string;
+    id: number;
     name: string;
     email: string;
+    bio?: string;
     interests?: string[];
 }
-
-// Type for Update Profile Input
+  
+// Input Data for Updating Profile
 export interface UpdateProfileData {
     name?: string;
+    bio?: string;
     interests?: string[];
 }
   
