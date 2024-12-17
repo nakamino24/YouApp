@@ -23,12 +23,12 @@ export default function RegisterPage() {
       setSuccess("");
       return;
     }
-
+  
     const response = await register({ email, password });
     if (response.success) {
       setSuccess("Registration successful!");
       setError("");
-      router.push("/auth/login");
+      router.push("/profile/getProfile"); 
     } else {
       setError(response.message || "Failed to register.");
       setSuccess("");
