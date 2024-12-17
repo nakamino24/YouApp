@@ -1,23 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import Layout from "../../../components/Layout";
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
+import { EyeOpenIcon, EyeClosedIcon } from "../../../components/icons/EyeIcon";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handleLogin = () => {
     console.log("Login with", { email, password });
   };
 
   const handleBack = () => {
-    router.push("/"); 
+    router.push("/");
   };
 
   return (
@@ -36,13 +38,22 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Input
-          placeholder="********"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          icon={<span>👁️</span>}
-        />
+
+        <div className="relative">
+          <Input
+            placeholder="********"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-2/4 transform -translate-y-1/2 text-gray-400 hover:text-white"
+          >
+            {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+          </button>
+        </div>
 
         <Button text="Login" onClick={handleLogin} variant="gradient" />
       </form>
