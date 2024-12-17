@@ -1,44 +1,92 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Layout from "../../../components/Layout";
+import Input from "../../../components/Input";
+import Button from "../../../components/Button";
 import register from "../../../services/auth/register";
-import FormInput from "../../../components/Input";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  
+  const router = useRouter();
 
   const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      setError("Passwords do not match!");
+      setSuccess("");
+      return;
+    }
+
     const response = await register({ email, password });
     if (response.success) {
       setSuccess("Registration successful!");
       setError("");
+      router.push("/auth/login");
     } else {
       setError(response.message || "Failed to register.");
       setSuccess("");
     }
   };
 
+  const handleBack = () => {
+    router.push("/"); 
+  };
+
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
-      <FormInput label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <FormInput
-        label="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button
-        onClick={handleRegister}
-        className="mt-4 bg-green-500 text-white p-2 rounded w-full"
-      >
-        Register
+    <Layout>
+      {/* Back Button */}
+      <button onClick={handleBack} className="text-gray-400 hover:text-white mb-6">
+        {"<"} Back
       </button>
+
+      {/* Title */}
+      <h1 className="text-3xl font-bold text-white mb-6 text-center">Register</h1>
+
+      {/* Form Inputs */}
+      <div className="space-y-4">
+        <Input
+          placeholder="Enter Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
+          placeholder="Create Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input
+          placeholder="Create Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Input
+          placeholder="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <Button text="Register" onClick={handleRegister} variant="gradient" />
+      </div>
+
+      {/* Success and Error Messages */}
       {error && <p className="text-red-500 mt-2">{error}</p>}
       {success && <p className="text-green-500 mt-2">{success}</p>}
-    </div>
+
+      {/* Login Redirect */}
+      <p className="text-gray-400 text-center mt-6">
+        Have an account?{" "}
+        <a href="/auth/login" className="text-blue-400 hover:underline">
+          Login here
+        </a>
+      </p>
+    </Layout>
   );
 }
