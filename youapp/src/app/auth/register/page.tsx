@@ -41,8 +41,12 @@ export default function RegisterPage() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-900">
       <div className="p-6 bg-gray-800 rounded-lg w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-white mb-4 text-center">Register</h1>
-        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+        <h1 className="text-2xl font-bold text-white mb-4 text-center">
+          Register
+        </h1>
+        {error && (
+          <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+        )}
         <Input
           label="Email"
           type="email"

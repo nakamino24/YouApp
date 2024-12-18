@@ -1,4 +1,10 @@
-export async function register({ email, password }: { email: string; password: string }) {
+export async function register({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
   try {
     const response = await fetch("/api/register", {
       method: "POST",

@@ -1,4 +1,10 @@
-export async function login({ email, password }: { email: string; password: string }) {
+export async function login({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
   try {
     const response = await fetch("/api/login", {
       method: "POST",

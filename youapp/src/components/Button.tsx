@@ -1,11 +1,16 @@
 interface ButtonProps {
-  label: string; 
+  label: string;
   onClick?: () => void;
-  isLoading?: boolean; 
-  disabled?: boolean; 
+  isLoading?: boolean;
+  disabled?: boolean;
 }
 
-export default function Button({ label, onClick, isLoading = false, disabled = false }: ButtonProps) {
+export default function Button({
+  label,
+  onClick,
+  isLoading = false,
+  disabled = false,
+}: ButtonProps) {
   return (
     <button
       onClick={onClick}

@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["via.placeholder.com"], 
+    domains: ["via.placeholder.com"],
   },
   webpack: (config) => {
     config.module.rules.push({

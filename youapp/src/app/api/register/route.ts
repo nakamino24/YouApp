@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     if (!email || !password) {
       return NextResponse.json(
         { success: false, message: "Email and password are required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     if (existingUser) {
       return NextResponse.json(
         { success: false, message: "Email already registered." },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -34,13 +34,13 @@ export async function POST(req: NextRequest) {
         message: "Registration successful!",
         data: { email },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Register Error:", error);
     return NextResponse.json(
       { success: false, message: "Internal server error." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

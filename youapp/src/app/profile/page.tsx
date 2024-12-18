@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import Input from "@/components/Input";
-import Button from "@/components/Button";
-import { getHoroscope, getZodiac } from "@/utils/dateUtils";
+import { calculateHoroscope, calculateZodiac } from "@/utils/dateUtils";
+import { useRouter } from "next/navigation";
 
 interface Profile {
   name: string;
@@ -24,7 +24,9 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isEditingAbout, setIsEditingAbout] = useState<boolean>(false);
   const [formAbout, setFormAbout] = useState<Partial<Profile>>({});
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   // Fetch profile data
   const fetchProfile = async () => {
@@ -39,15 +41,13 @@ export default function ProfilePage() {
         name: data.data.name || "johndoe123",
         age: data.data.age || 28,
         gender: data.data.gender || "Male",
-        birthday: data.data.birthday || "28 / 08 / 1995",
+        birthday: data.data.birthday || "1995-08-11",
         horoscope: data.data.horoscope || "Virgo",
         zodiac: data.data.zodiac || "Pig",
         height: data.data.height || 175,
         weight: data.data.weight || 69,
         interests: data.data.interests || ["Music", "Basketball", "Fitness"],
-        profileImage:
-          data.data.profileImage ||
-          "https://via.placeholder.com/400x200.png?text=Profile+Header",
+        profileImage: data.data.profileImage || "/default-profile.png",
       });
     }
     setLoading(false);
@@ -59,33 +59,69 @@ export default function ProfilePage() {
 
   // Handle Edit
   const handleEditAbout = () => {
-    setIsEditingAbout(true);
-    setFormAbout(profile);
+    if (profile) {
+      setIsEditingAbout(true);
+      setFormAbout(profile);
+    }
   };
 
   // Handle Change
-  const handleChange = (field: keyof Profile, value: string) => {
+  const handleChange = (field: keyof Profile, value: string | number) => {
     const updatedForm = { ...formAbout, [field]: value };
 
-    if (field === "birthday") {
-      const [day, month, year] = value.split(" ").map(Number);
-      updatedForm.horoscope = getHoroscope(day, month - 1);
-      updatedForm.zodiac = getZodiac(year);
+    if (field === "birthday" && typeof value === "string") {
+      const [year, month, day] = value.split("-").map(Number);
+
+      if (year && month && day) {
+        updatedForm.horoscope = calculateHoroscope(value);
+        updatedForm.zodiac = calculateZodiac(year);
+      } else {
+        console.error("Invalid birthday format:", value);
+        updatedForm.horoscope = "Invalid Date";
+        updatedForm.zodiac = "Invalid Date";
+      }
     }
 
     setFormAbout(updatedForm);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
+
+
   // Save About
   const handleSaveAbout = async () => {
+    let imageUrl = formAbout.profileImage;
+
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append("profileImage", selectedImage);
+
+      const imageResponse = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const imageResult = await imageResponse.json();
+      if (imageResult.success) {
+        imageUrl = imageResult.imageUrl;
+      }
+    }
+
+    const updatedProfile = { ...formAbout, profileImage: imageUrl };
+
     const response = await fetch("/api/profile", {
       method: "PUT",
-      headers: { "Content-Type": "application/json", "x-access-token": "mock-token-12345" },
-      body: JSON.stringify(formAbout),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedProfile),
     });
     const result = await response.json();
+
     if (result.success) {
-      setProfile(formAbout);
+      setProfile(updatedProfile as Profile);
       setIsEditingAbout(false);
     }
   };
@@ -109,11 +145,15 @@ export default function ProfilePage() {
             <div className="absolute bottom-4 left-4">
               <h1 className="text-xl font-bold">@{profile?.name}</h1>
               <p className="text-gray-300">
-                {profile?.gender}, {profile?.age}
+                {profile?.gender} 
               </p>
               <div className="flex space-x-2 mt-1">
-                <span className="px-2 py-1 bg-gray-700 text-xs rounded">{profile?.horoscope}</span>
-                <span className="px-2 py-1 bg-gray-700 text-xs rounded">{profile?.zodiac}</span>
+                <span className="px-2 py-1 bg-gray-700 text-xs rounded">
+                  {profile?.horoscope}
+                </span>
+                <span className="px-2 py-1 bg-gray-700 text-xs rounded">
+                  {profile?.zodiac}
+                </span>
               </div>
             </div>
           </div>
@@ -122,7 +162,11 @@ export default function ProfilePage() {
           <div className="bg-gray-800 p-4 rounded-lg mb-4 relative">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-gray-400 text-sm">About</h2>
-              {!isEditingAbout && (
+              {isEditingAbout ? (
+                <button onClick={handleSaveAbout} className="text-gray-400 hover:text-white">
+                  Save & Update
+                </button>
+              ) : (
                 <button onClick={handleEditAbout} className="text-gray-400 hover:text-white">
                   <PencilIcon className="w-5 h-5" />
                 </button>
@@ -131,27 +175,66 @@ export default function ProfilePage() {
 
             {isEditingAbout ? (
               <div className="space-y-2">
+                {/* Image Upload */}
+                <div className="flex items-center space-x-4">
+                  <div className="relative w-16 h-16 bg-gray-700 rounded-full">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={handleImageChange}
+                    />
+                    <span className="text-gray-300 text-sm flex justify-center items-center w-full h-full">
+                      +
+                    </span>
+                  </div>
+                  <p className="text-gray-400">Add Image</p>
+                </div>
+
+                {/* Form Inputs */}
+                <Input
+                  label="Display Name"
+                  type="text"
+                  value={formAbout.name || ""}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                />
+                <Input
+                  label="Gender"
+                  type="select"
+                  value={formAbout.gender || ""}
+                  options={["Male", "Female", "Other"]}
+                  onChange={(e) => handleChange("gender", e.target.value)}
+                />
                 <Input
                   label="Birthday"
-                  type="text"
-                  value={formAbout.birthday}
+                  type="date"
+                  value={formAbout.birthday || ""}
                   onChange={(e) => handleChange("birthday", e.target.value)}
                 />
-                <Input label="Horoscope" type="text" value={formAbout.horoscope} readOnly />
-                <Input label="Zodiac" type="text" value={formAbout.zodiac} readOnly />
+                <Input
+                  label="Horoscope"
+                  type="text"
+                  value={formAbout.horoscope || ""}
+                  readOnly
+                />
+                <Input
+                  label="Zodiac"
+                  type="text"
+                  value={formAbout.zodiac || ""}
+                  readOnly
+                />
                 <Input
                   label="Height"
                   type="number"
-                  value={formAbout.height}
+                  value={formAbout.height || ""}
                   onChange={(e) => handleChange("height", e.target.value)}
                 />
                 <Input
                   label="Weight"
                   type="number"
-                  value={formAbout.weight}
+                  value={formAbout.weight || ""}
                   onChange={(e) => handleChange("weight", e.target.value)}
                 />
-                <Button label="Save & Update" onClick={handleSaveAbout} />
               </div>
             ) : (
               <>
@@ -168,7 +251,10 @@ export default function ProfilePage() {
           <div className="bg-gray-800 p-4 rounded-lg relative">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-gray-400 text-sm">Interest</h2>
-              <button className="text-gray-400 hover:text-white">
+              <button
+                onClick={() => router.push("/edit-interests")}
+                className="text-gray-400 hover:text-white"
+              >
                 <PencilIcon className="w-5 h-5" />
               </button>
             </div>

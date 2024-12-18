@@ -15,7 +15,9 @@ export default function Home() {
           Discover the Future with <span className="text-blue-500">YouApp</span>
         </h1>
         <p className="text-gray-300 mb-8 max-w-2xl leading-relaxed">
-          Unlock a world of innovation and simplicity. Seamlessly manage your tasks, connect with others, and elevate your digital experience. Get started today by signing in or creating a new account.
+          Unlock a world of innovation and simplicity. Seamlessly manage your
+          tasks, connect with others, and elevate your digital experience. Get
+          started today by signing in or creating a new account.
         </p>
         <div className="flex gap-6">
           <Link href="/auth/login" legacyBehavior>
@@ -33,8 +35,14 @@ export default function Home() {
         {/* Enhanced Decorative Element */}
         <div className="mt-12 w-48 h-1 bg-blue-500 rounded-full shadow-md" />
         <div className="absolute inset-0 pointer-events-none flex justify-between">
-          <div className="w-16 h-16 bg-blue-500 opacity-20 rounded-full blur-2xl" style={{ marginTop: "10%", marginLeft: "5%" }}></div>
-          <div className="w-16 h-16 bg-gray-500 opacity-20 rounded-full blur-2xl" style={{ marginBottom: "10%", marginRight: "5%" }}></div>
+          <div
+            className="w-16 h-16 bg-blue-500 opacity-20 rounded-full blur-2xl"
+            style={{ marginTop: "10%", marginLeft: "5%" }}
+          ></div>
+          <div
+            className="w-16 h-16 bg-gray-500 opacity-20 rounded-full blur-2xl"
+            style={{ marginBottom: "10%", marginRight: "5%" }}
+          ></div>
         </div>
       </main>
 

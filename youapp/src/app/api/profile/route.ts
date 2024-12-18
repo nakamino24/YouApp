@@ -19,12 +19,21 @@ export async function GET(req: NextRequest) {
   try {
     const token = req.headers.get("x-access-token");
     if (!token || token !== "mock-token-12345") {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
     }
 
-    return NextResponse.json({ success: true, data: mockUserProfile }, { status: 200 });
+    return NextResponse.json(
+      { success: true, data: mockUserProfile },
+      { status: 200 },
+    );
   } catch (error) {
-    return NextResponse.json({ success: false, message: error }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: error },
+      { status: 500 },
+    );
   }
 }
 
@@ -33,17 +42,32 @@ export async function PUT(req: NextRequest) {
   try {
     const token = req.headers.get("x-access-token");
     if (!token || token !== "mock-token-12345") {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
     }
 
     const body = await req.json();
-    const { name, about, birthday, height, weight, interests, horoscope, zodiac } = body;
+    const {
+      name,
+      about,
+      birthday,
+      height,
+      weight,
+      interests,
+      horoscope,
+      zodiac,
+    } = body;
 
     // Validasi input
     if (!name || !birthday || !height || !weight) {
       return NextResponse.json(
-        { success: false, message: "Name, birthday, height, and weight are required." },
-        { status: 400 }
+        {
+          success: false,
+          message: "Name, birthday, height, and weight are required.",
+        },
+        { status: 400 },
       );
     }
 
@@ -66,6 +90,9 @@ export async function PUT(req: NextRequest) {
       data: mockUserProfile,
     });
   } catch (error) {
-    return NextResponse.json({ success: false, message: error }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: error },
+      { status: 500 },
+    );
   }
 }
