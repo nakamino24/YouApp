@@ -5,10 +5,11 @@ interface InputProps {
   label: string;
   type: string;
   placeholder?: string;
-  value: string;
+  value: string | number; 
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  readOnly?: boolean; // Properti baru
+  readOnly?: boolean;
 }
+
 
 export default function Input({ label, type, placeholder, value, onChange, readOnly = false }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);

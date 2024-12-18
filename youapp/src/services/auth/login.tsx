@@ -1,30 +1,15 @@
-import { ApiResponse } from "../../types/apiTypes";
+export async function login({ email, password }: { email: string; password: string }) {
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  token: string;
-  user: {
-    id: number;
-    email: string;
-    name: string;
-  };
-}
-
-export default async function login(data: LoginData): Promise<ApiResponse<LoginResponse>> {
-  const response = await fetch("/api/proxy-login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to login");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Service Login Error:", error);
+    return { success: false, message: "Something went wrong." };
   }
-
-  return response.json();
 }

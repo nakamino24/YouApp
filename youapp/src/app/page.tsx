@@ -1,47 +1,45 @@
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white">
+    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       {/* Header */}
-      <header className="w-full bg-gray-900 py-4 px-8 flex justify-between items-center shadow-lg">
-        <div className="flex items-center">
-          <Image src="/globe.svg" alt="Logo" width={32} height={32} className="mr-2" />
-          <h1 className="text-2xl font-bold tracking-wide">YouApp</h1>
-        </div>
-        <nav className="space-x-4">
-          <Link href="/auth/login" className="hover:text-blue-400 transition">Login</Link>
-          <Link href="/auth/register" className="hover:text-blue-400 transition">Register</Link>
-        </nav>
-      </header>
+      <Header />
 
-      {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-5xl font-bold mb-6 tracking-wide">
-          Welcome to <span className="text-blue-400">YouApp!</span>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 relative">
+        {/* Hero Content */}
+        <h1 className="text-6xl font-bold mb-6 tracking-wide leading-tight">
+          Discover the Future with <span className="text-blue-500">YouApp</span>
         </h1>
-        <p className="text-gray-400 mb-8 max-w-lg leading-relaxed">
-          Simplify your experience with modern design and functionality. Start by logging in or creating an account!
+        <p className="text-gray-300 mb-8 max-w-2xl leading-relaxed">
+          Unlock a world of innovation and simplicity. Seamlessly manage your tasks, connect with others, and elevate your digital experience. Get started today by signing in or creating a new account.
         </p>
-        <div className="flex gap-4">
-          <Link href="/auth/login">
-            <button className="px-6 py-3 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700 transition duration-300">
-              Login
+        <div className="flex gap-6">
+          <Link href="/auth/login" legacyBehavior>
+            <button className="px-8 py-3 rounded-lg font-semibold bg-blue-500 hover:bg-blue-600 transition duration-300 shadow-lg">
+              Sign In
             </button>
           </Link>
-          <Link href="/auth/register">
-            <button className="px-6 py-3 rounded-lg font-semibold bg-gray-700 hover:bg-gray-600 transition duration-300">
-              Register
+          <Link href="/auth/register" legacyBehavior>
+            <button className="px-8 py-3 rounded-lg font-semibold bg-gray-700 hover:bg-gray-600 transition duration-300 shadow-lg">
+              Create Account
             </button>
           </Link>
+        </div>
+
+        {/* Enhanced Decorative Element */}
+        <div className="mt-12 w-48 h-1 bg-blue-500 rounded-full shadow-md" />
+        <div className="absolute inset-0 pointer-events-none flex justify-between">
+          <div className="w-16 h-16 bg-blue-500 opacity-20 rounded-full blur-2xl" style={{ marginTop: "10%", marginLeft: "5%" }}></div>
+          <div className="w-16 h-16 bg-gray-500 opacity-20 rounded-full blur-2xl" style={{ marginBottom: "10%", marginRight: "5%" }}></div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-gray-900 py-4 text-center text-gray-500">
-        <p>&copy; {new Date().getFullYear()} YouApp. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

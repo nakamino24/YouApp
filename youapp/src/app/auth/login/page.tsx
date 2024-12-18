@@ -1,97 +1,58 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Layout from "@/components/Layout";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import login from "@/services/auth/login";
+import { login } from "@/services/auth/login";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
   const handleLogin = async () => {
-    setLoading(true);
     setError("");
+    setLoading(true);
+    const result = await login({ email, password });
+    setLoading(false);
 
-    try {
-      const response = await login({ email, password });
-      console.log("Login Response:", response); 
-
-      if (response.success && response.data) {
-        localStorage.setItem("token", response.data.token); 
-        router.push("/profile/getProfile"); 
-      } else {
-        setError(response.message || "Invalid email or password.");
-      }
-    } catch  {
-      setError("Something went wrong.");
-    } finally {
-      setLoading(false);
+    if (result.success) {
+      localStorage.setItem("token", result.data.token); // Simpan token
+      router.push("/profile");
+    } else {
+      setError(result.message || "Failed to login.");
     }
   };
 
-  const handleBack = () => {
-    router.push("/");
-  };
-
   return (
-    <Layout>
-      {/* Back Button */}
-      <button
-        onClick={handleBack}
-        className="text-gray-400 hover:text-white mb-6 flex items-center"
-      >
-        <svg
-          className="w-5 h-5 mr-1"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-        <span>Back</span>
-      </button>
-
-      {/* Header */}
-      <h1 className="text-3xl font-bold text-white mb-6 text-center">Welcome Back!</h1>
-      <p className="text-gray-400 text-center mb-6">Please login to your account</p>
-
-      {/* Form */}
-      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+    <div className="flex justify-center items-center min-h-screen bg-gray-900">
+      <div className="p-6 bg-gray-800 rounded-lg w-full max-w-sm">
+        <h1 className="text-2xl font-bold text-white mb-4 text-center">Login</h1>
+        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
         <Input
           label="Email"
-          placeholder="Enter your email"
           type="email"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         <Input
           label="Password"
-          placeholder="Enter your password"
           type="password"
+          placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        {/* Error Message */}
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-
-        {/* Login Button */}
         <Button
-          label={loading ? "Logging in..." : "Login"}
+          label="Login"
           onClick={handleLogin}
           isLoading={loading}
           disabled={loading}
         />
-      </form>
-    </Layout>
+      </div>
+    </div>
   );
 }

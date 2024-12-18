@@ -1,11 +1,15 @@
-import { ApiResponse, AuthData, RegisterResponse } from "../../types/apiTypes";
+export async function register({ email, password }: { email: string; password: string }) {
+  try {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-export default async function register(data: AuthData): Promise<ApiResponse<RegisterResponse>> {
-  const response = await fetch("/api/proxy-register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  return response.json();
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Service Register Error:", error);
+    return { success: false, message: "Something went wrong." };
+  }
 }
