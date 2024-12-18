@@ -3,8 +3,9 @@ interface InputProps {
   type?: string;
   placeholder?: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  icon?: React.ReactNode; 
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  icon?: React.ReactNode;
+  readOnly?: boolean; 
 }
 
 export default function Input({
@@ -14,6 +15,7 @@ export default function Input({
   value,
   onChange,
   icon,
+  readOnly = false,
 }: InputProps) {
   return (
     <div className="relative mb-4">
@@ -23,6 +25,7 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        readOnly={readOnly} 
         className="w-full bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded-md outline-none focus:ring-2 focus:ring-blue-400"
       />
       {icon && (

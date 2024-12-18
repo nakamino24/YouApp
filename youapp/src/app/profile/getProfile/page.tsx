@@ -8,7 +8,11 @@ import getProfile from "../../../services/profile/getProfile";
 interface ProfileData {
   username: string;
   name: string;
-  about: string;
+  birthday?: string;
+  horoscope?: string;
+  zodiac?: string;
+  height?: string;
+  weight?: string;
   interests: string;
 }
 
@@ -16,7 +20,11 @@ export default function GetProfilePage() {
   const [profile, setProfile] = useState<ProfileData>({
     username: "",
     name: "",
-    about: "",
+    birthday: "",
+    horoscope: "",
+    zodiac: "",
+    height: "",
+    weight: "",
     interests: "",
   });
 
@@ -28,16 +36,21 @@ export default function GetProfilePage() {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        router.push("/auth/login"); 
+        router.push("/auth/login");
         return;
       }
 
       const response = await getProfile(token);
+
       if (response.success && response.data) {
         setProfile({
           username: `@${response.data.email.split("@")[0]}`,
-          name: response.data.name,
-          about: response.data.bio || "No bio available.",
+          name: response.data.name || "No name available.",
+          birthday: response.data.birthday || "N/A",
+          horoscope: response.data.horoscope || "N/A",
+          zodiac: response.data.zodiac || "N/A",
+          height: response.data.height ? `${response.data.height} cm` : "N/A",
+          weight: response.data.weight ? `${response.data.weight} kg` : "N/A",
           interests: response.data.interests?.join(", ") || "No interests available.",
         });
       } else {
@@ -62,9 +75,7 @@ export default function GetProfilePage() {
             {"<"} Back
           </button>
           <h1 className="text-xl font-bold">{profile.name || "Loading..."}</h1>
-          <button className="text-gray-400 hover:text-white">
-            <PencilIcon />
-          </button>
+          <button className="text-gray-400 hover:text-white">...</button>
         </div>
 
         {/* Error Message */}
@@ -79,9 +90,26 @@ export default function GetProfilePage() {
         <div className="bg-gray-800 rounded-lg p-6 mb-4 flex justify-between">
           <div>
             <h3 className="text-md font-semibold mb-1">About</h3>
-            <p className="text-gray-400">{profile.about}</p>
+            <p className="text-gray-400">
+              <span className="font-semibold text-white">Birthday:</span> {profile.birthday}
+            </p>
+            <p className="text-gray-400">
+              <span className="font-semibold text-white">Horoscope:</span> {profile.horoscope}
+            </p>
+            <p className="text-gray-400">
+              <span className="font-semibold text-white">Zodiac:</span> {profile.zodiac}
+            </p>
+            <p className="text-gray-400">
+              <span className="font-semibold text-white">Height:</span> {profile.height}
+            </p>
+            <p className="text-gray-400">
+              <span className="font-semibold text-white">Weight:</span> {profile.weight}
+            </p>
           </div>
-          <button className="text-gray-400 hover:text-white">
+          <button
+            onClick={() => router.push("/profile/editAbout")}
+            className="text-gray-400 hover:text-white"
+          >
             <PencilIcon />
           </button>
         </div>

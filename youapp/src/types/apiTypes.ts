@@ -35,12 +35,23 @@ export interface ProfileData {
     email: string;
     bio?: string;
     interests?: string[];
+    birthday?: string; 
+    horoscope?: string;
+    zodiac?: string;   
+    height?: number;   
+    weight?: number;   
 }
   
 // Input Data for Updating Profile
 export interface UpdateProfileData {
-    name?: string;
+    name: string;
+    email: string;
     bio?: string;
     interests?: string[];
+    birthday?: string; 
+    horoscope?: string;   
+    zodiac?: string;   
+    height?: number;   
+    weight?: number;
 }
   

@@ -1,17 +1,27 @@
-import { ApiResponse, UpdateProfileData, ProfileData } from "../../types/apiTypes";
+import { ApiResponse } from "../../types/apiTypes";
+
+interface UpdateProfileData {
+  name?: string;
+  gender?: string;
+  birthday?: string;
+  horoscope?: string;
+  zodiac?: string;
+  height?: number;
+  weight?: number;
+}
 
 export default async function updateProfile(
   token: string,
   data: UpdateProfileData
-): Promise<ApiResponse<ProfileData>> {
-  const BASE_URL = "http://techtest.youapp.ai/api";
-  const response = await fetch(`${BASE_URL}/profile`, {
+): Promise<ApiResponse> {
+  const response = await fetch("/api/proxy-profile", {
     method: "PUT",
     headers: {
-      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
+      "x-access-token": token,
     },
     body: JSON.stringify(data),
   });
+
   return response.json();
 }

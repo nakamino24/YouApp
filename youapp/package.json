@@ -9,16 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "15.1.0",
+    "formidable": "^3.5.2",
+    "next": "^15.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
     "@eslint/eslintrc": "^3",
+    "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.20",
+    "babel-loader": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
     "postcss": "^8.4.49",
