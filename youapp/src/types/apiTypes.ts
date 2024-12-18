@@ -47,15 +47,15 @@ export interface ProfileData {
   
 // Input Data for Updating Profile
 export interface UpdateProfileData {
-    name: string;
-    email: string;
-    bio?: string;
-    image?: string; 
-    interests?: string[];
-    birthday?: string; 
-    horoscope?: string;   
-    zodiac?: string;   
-    height?: number;   
+    name?: string;
+    gender?: string;
+    birthday?: string;
+    horoscope?: string;
+    zodiac?: string;
+    height?: number;
     weight?: number;
-}
+    interests?: string;
+    image?: string;
+  }
+  
   

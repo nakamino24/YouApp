@@ -1,32 +1,20 @@
 interface ButtonProps {
-  text: string;
-  onClick: () => void;
-  variant?: "primary" | "gradient";
+  label: string; 
+  onClick?: () => void;
+  isLoading?: boolean; 
   disabled?: boolean; 
 }
 
-export default function Button({
-  text,
-  onClick,
-  variant = "primary",
-  disabled = false,
-}: ButtonProps) {
-  const baseStyle =
-    "w-full py-2 rounded-md font-semibold text-white focus:outline-none";
-  const variantStyle =
-    variant === "gradient"
-      ? "bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 transition-all duration-300"
-      : "bg-blue-500 hover:bg-blue-600";
-
-  const disabledStyle = "opacity-50 cursor-not-allowed";
-
+export default function Button({ label, onClick, isLoading = false, disabled = false }: ButtonProps) {
   return (
     <button
       onClick={onClick}
-      disabled={disabled} 
-      className={`${baseStyle} ${variantStyle} ${disabled ? disabledStyle : ""}`}
+      disabled={isLoading || disabled}
+      className={`w-full py-3 rounded-lg text-white font-semibold transition 
+        ${isLoading || disabled ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}
+      `}
     >
-      {text}
+      {isLoading ? "Loading..." : label}
     </button>
   );
 }

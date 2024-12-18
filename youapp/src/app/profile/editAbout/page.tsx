@@ -145,13 +145,50 @@ export default function EditAboutPage() {
 
         {/* Form */}
         <div className="space-y-4">
-          <Input label="Display Name" placeholder="Enter name" value={name} onChange={(e) => setName(e.target.value)} />
-          <Input label="Gender" placeholder="Enter gender" value={gender} onChange={(e) => setGender(e.target.value)} />
-          <Input label="Birthday" type="date" value={birthday} onChange={(e) => handleBirthdayChange(e.target.value)} />
-          <Input label="Horoscope" value={horoscope} readOnly />
-          <Input label="Zodiac (Shio)" value={zodiac} readOnly />
-          <Input label="Height (cm)" type="number" value={height} onChange={(e) => setHeight(e.target.value)} />
-          <Input label="Weight (kg)" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} />
+        <Input
+        label="Display Name"
+        type="text" 
+        placeholder="Enter name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        />
+        <Input
+        label="Gender"
+        type="text"
+        placeholder="Enter gender"
+        value={gender}
+        onChange={(e) => setGender(e.target.value)}
+        />
+        <Input
+        label="Birthday"
+        type="date"
+        value={birthday}
+        onChange={(e) => handleBirthdayChange(e.target.value)}
+        />
+        <Input
+        label="Horoscope"
+        type="text"
+        value={horoscope}
+        readOnly 
+        />
+        <Input
+        label="Zodiac (Shio)"
+        type="text"
+        value={zodiac}
+        readOnly 
+        />
+        <Input
+        label="Height (cm)"
+        type="number"
+        value={height}
+        onChange={(e) => setHeight(e.target.value)}
+        />
+        <Input
+        label="Weight (kg)"
+        type="number"
+        value={weight}
+        onChange={(e) => setWeight(e.target.value)}
+        />
         </div>
         <div className="relative mt-6 bg-gray-800 rounded-lg p-6">
           <div>

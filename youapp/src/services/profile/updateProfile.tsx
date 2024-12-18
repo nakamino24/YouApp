@@ -8,6 +8,7 @@ interface UpdateProfileData {
   zodiac?: string;
   height?: number;
   weight?: number;
+  interests: string;
 }
 
 export default async function updateProfile(

@@ -2,16 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Layout from "../../../components/Layout";
-import Input from "../../../components/Input";
-import Button from "../../../components/Button";
-import { EyeOpenIcon, EyeClosedIcon } from "../../../components/icons/EyeIcon";
-import login from "../../../services/auth/login"; // Service untuk login
+import Layout from "@/components/Layout";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import login from "@/services/auth/login";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,15 +19,21 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const response = await login({ email, password });
-    if (response.success && response.data) {
-      localStorage.setItem("token", response.data.token);
-      router.push("/profile/getProfile");
-    } else {
-      setError(response.message || "Invalid email or password.");
-    }
+    try {
+      const response = await login({ email, password });
+      console.log("Login Response:", response); 
 
-    setLoading(false);
+      if (response.success && response.data) {
+        localStorage.setItem("token", response.data.token); 
+        router.push("/profile/getProfile"); 
+      } else {
+        setError(response.message || "Invalid email or password.");
+      }
+    } catch  {
+      setError("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -39,52 +43,55 @@ export default function LoginPage() {
   return (
     <Layout>
       {/* Back Button */}
-      <button onClick={handleBack} className="text-gray-400 hover:text-white mb-6">
-        {"<"} Back
+      <button
+        onClick={handleBack}
+        className="text-gray-400 hover:text-white mb-6 flex items-center"
+      >
+        <svg
+          className="w-5 h-5 mr-1"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+        <span>Back</span>
       </button>
 
-      <h1 className="text-3xl font-bold text-white mb-6 text-center">Login</h1>
+      {/* Header */}
+      <h1 className="text-3xl font-bold text-white mb-6 text-center">Welcome Back!</h1>
+      <p className="text-gray-400 text-center mb-6">Please login to your account</p>
 
+      {/* Form */}
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
         <Input
-          placeholder="Johndoe@gmail.com"
+          label="Email"
+          placeholder="Enter your email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <div className="relative">
-          <Input
-            placeholder="********"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-3 top-2/4 transform -translate-y-1/2 text-gray-400 hover:text-white"
-          >
-            {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
-          </button>
-        </div>
+        <Input
+          label="Password"
+          placeholder="Enter your password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {/* Error Message */}
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
+        {/* Login Button */}
         <Button
-          text={loading ? "Logging in..." : "Login"}
+          label={loading ? "Logging in..." : "Login"}
           onClick={handleLogin}
-          variant="gradient"
+          isLoading={loading}
           disabled={loading}
         />
       </form>
-
-      <p className="text-gray-400 text-center mt-6">
-        No account?{" "}
-        <a href="/auth/register" className="text-blue-400 hover:underline">
-          Register here
-        </a>
-      </p>
     </Layout>
   );
 }
