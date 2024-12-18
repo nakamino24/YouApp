@@ -34,6 +34,8 @@ export interface ProfileData {
     name: string;
     email: string;
     bio?: string;
+    image?: string; 
+    gender?: string; 
     interests?: string[];
     birthday?: string; 
     horoscope?: string;
@@ -41,12 +43,14 @@ export interface ProfileData {
     height?: number;   
     weight?: number;   
 }
+
   
 // Input Data for Updating Profile
 export interface UpdateProfileData {
     name: string;
     email: string;
     bio?: string;
+    image?: string; 
     interests?: string[];
     birthday?: string; 
     horoscope?: string;   
