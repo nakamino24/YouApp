@@ -156,6 +156,28 @@ export default function ProfilePage() {
         <p className="text-center mt-10">Loading...</p>
       ) : (
         <>
+          <div className="flex items-center mb-4">
+            <button
+              onClick={() => router.push('/')}
+              className="text-gray-400 hover:text-white flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              Back
+            </button>
+          </div>
           {/* Header Section */}
           <div className="relative mb-6 w-full h-48">
             <Image
