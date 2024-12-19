@@ -156,10 +156,12 @@ export default function ProfilePage() {
         <p className="text-center mt-10">Loading...</p>
       ) : (
         <>
-          <div className="flex items-center mb-4">
+          {/* Back Button and Header */}
+          <div className="flex items-center justify-between mb-6 relative">
+            {/* Back Button */}
             <button
               onClick={() => router.push('/')}
-              className="text-gray-400 hover:text-white flex items-center"
+              className="absolute left-0 text-gray-400 hover:text-white flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +179,13 @@ export default function ProfilePage() {
               </svg>
               Back
             </button>
+
+            {/* Username */}
+            <h1 className="text-xl font-bold text-gray-100 mx-auto">
+              @{profile?.name}
+            </h1>
           </div>
+
           {/* Header Section */}
           <div className="relative mb-6 w-full h-48">
             <Image
@@ -189,10 +197,10 @@ export default function ProfilePage() {
               className="rounded-b-lg"
             />
             <div className="absolute bottom-4 left-4">
-              <h1 className="text-xl font-bold text-gray-500">
+              <h1 className="text-xl font-bold text-gray-300">
                 @{profile?.name}
               </h1>
-              <p className="text-gray-500">{profile?.gender}</p>
+              <p className="text-gray-300">{profile?.gender}</p>
               <div className="flex space-x-2 mt-1">
                 <span className="px-2 py-1 bg-gray-700 text-xs rounded">
                   <HoroscopeIcon
