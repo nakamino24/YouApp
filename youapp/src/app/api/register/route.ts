@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { users } from '@/mockDatabase/mockDatabase'
+
+// Mock Database
+const users: { name: string; email: string; password: string }[] = []
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Simpan user baru
+    // Simpan user baru (Mock)
     users.push({ name, email, password })
 
     // Response sukses

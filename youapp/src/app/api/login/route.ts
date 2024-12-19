@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { users } from '@/mockDatabase/mockDatabase' // Pastikan path sesuai dengan struktur Anda
+
+const mockUser = {
+  email: 'johndoe@gmail.com',
+  password: 'password123',
+  token: 'mock-token-12345',
+}
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json()
 
-    // Validasi input
     if (!email || !password) {
       return NextResponse.json(
         { success: false, message: 'Email and password are required.' },
@@ -13,26 +17,20 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Cek data pengguna di database
-    const user = users.find(
-      (user) => user.email === email && user.password === password
-    )
-
-    if (!user) {
+    if (email !== mockUser.email || password !== mockUser.password) {
       return NextResponse.json(
         { success: false, message: 'Invalid email or password.' },
         { status: 401 }
       )
     }
 
-    // Response sukses
     return NextResponse.json(
       {
         success: true,
         message: 'Login successful!',
         data: {
-          token: 'mock-token-12345',
-          user: { name: user.name, email: user.email },
+          token: mockUser.token,
+          user: { email: mockUser.email, name: 'John Doe' },
         },
       },
       { status: 200 }
